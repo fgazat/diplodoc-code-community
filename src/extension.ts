@@ -54,7 +54,7 @@ export function activate(context: vscode.ExtensionContext) {
                 const cursorPos = position.character;
                 const beforeCursor = lineText.substring(0, cursorPos);
 
-                const match = beforeCursor.match(/\{\{\s*([\w.]*)$/);
+                const match = beforeCursor.match(/\{\{\s*([a-zA-Z0-9_.-]*)$/);
                 if (!match) {
                     console.log('[EXT] Not inside a {{...}} expression');
                     return [];
@@ -74,7 +74,6 @@ export function activate(context: vscode.ExtensionContext) {
                 }
 
                 const suggestions = Object.entries(contextObj).map(([key, val]) => {
-                    const insertText = new vscode.SnippetString(`${key} `);
 
                     const item = new vscode.CompletionItem(
                         key,
@@ -83,11 +82,21 @@ export function activate(context: vscode.ExtensionContext) {
                             : vscode.CompletionItemKind.Value
                     );
 
-                    item.insertText = insertText;
+
+
+                    let insertText = new vscode.SnippetString(`${key}`)
                     item.detail = `Path: ${['default', ...parts].join('.')}`;
                     if (typeof val !== 'object') {
                         item.detail = String(val);
+                        insertText = new vscode.SnippetString(`${key} `);
+                    } else {
+                        insertText = new vscode.SnippetString(`${key}.`);
+                        item.command = {
+                            title: 'Trigger Suggest',
+                            command: 'editor.action.triggerSuggest'
+                        };
                     }
+                    item.insertText = insertText;
                     return item;
                 });
 
@@ -110,7 +119,7 @@ export function activate(context: vscode.ExtensionContext) {
             const line = event.document.lineAt(position.line).text;
             const beforeCursor = line.slice(0, position.character);
 
-            if (/\{\{\s*[\w.]*\s*$/.test(beforeCursor)) {
+            if (/\{\{\s*([a-zA-Z0-9_.-]*)$/.test(beforeCursor)) {
                 vscode.commands.executeCommand('editor.action.triggerSuggest');
             }
         })
