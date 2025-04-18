@@ -6,6 +6,11 @@
   "engines": {
     "vscode": "^1.99.0"
   },
+  "publisher": "fgazat",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fgazat/diplodoc-code-community.git"
+  },
   "categories": [
     "Other"
   ],
