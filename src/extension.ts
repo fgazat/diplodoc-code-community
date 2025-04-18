@@ -1,39 +1,22 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import * as path from 'path';
 import * as yaml from 'yaml';
 
 let presetData: any = {};
 
 async function loadPresets(workspaceRoot: string) {
-    const cfgPath = path.join(workspaceRoot, 'cfg.yaml');
-    if (!fs.existsSync(cfgPath)) {
-        console.log('[EXT] cfg.yaml not found at:', cfgPath);
-        return;
-    }
-
-    console.log('[EXT] Loading cfg.yaml from:', cfgPath);
-    const cfgText = fs.readFileSync(cfgPath, 'utf-8');
-    const cfg = yaml.parse(cfgText);
-    const presetPaths: string[] = cfg?.var?.presets || [];
-
-    console.log('[EXT] Found preset paths in cfg.yaml:', presetPaths);
+    const presetUris = await vscode.workspace.findFiles('**/presets.yaml');
     presetData = {};
-
-    for (const presetRelPath of presetPaths) {
-        const presetPath = path.resolve(workspaceRoot, presetRelPath);
-        if (!fs.existsSync(presetPath)) {
-            console.log('[EXT] Skipping missing preset:', presetPath);
-            continue;
+    for (const uri of presetUris) {
+        try {
+            console.log('[EXT] Loading preset from:', uri.fsPath);
+            const presetText = fs.readFileSync(uri.fsPath, 'utf-8');
+            const data = yaml.parse(presetText);
+            presetData = { ...presetData, ...data };
+        } catch (err) {
+            console.error('[EXT] Failed to load preset:', uri.fsPath, err);
         }
-
-        console.log('[EXT] Loading preset:', presetPath);
-        const presetText = fs.readFileSync(presetPath, 'utf-8');
-        const data = yaml.parse(presetText);
-
-        presetData = { ...presetData, ...data };
     }
-
     console.log('[EXT] Final merged presetData:', JSON.stringify(presetData, null, 2));
 }
 
@@ -71,7 +54,6 @@ export function activate(context: vscode.ExtensionContext) {
                 const cursorPos = position.character;
                 const beforeCursor = lineText.substring(0, cursorPos);
 
-                // Match something like {{ User.Interface. (or even incomplete)
                 const match = beforeCursor.match(/\{\{\s*([\w.]*)$/);
                 if (!match) {
                     console.log('[EXT] Not inside a {{...}} expression');
@@ -92,15 +74,19 @@ export function activate(context: vscode.ExtensionContext) {
                 }
 
                 const suggestions = Object.entries(contextObj).map(([key, val]) => {
+                    const insertText = new vscode.SnippetString(`${key} `);
+
                     const item = new vscode.CompletionItem(
                         key,
                         typeof val === 'object'
                             ? vscode.CompletionItemKind.Field
                             : vscode.CompletionItemKind.Value
                     );
+
+                    item.insertText = insertText;
                     item.detail = `Path: ${['default', ...parts].join('.')}`;
                     if (typeof val !== 'object') {
-                        item.documentation = String(val);
+                        item.detail = String(val);
                     }
                     return item;
                 });
@@ -109,7 +95,25 @@ export function activate(context: vscode.ExtensionContext) {
                 return suggestions;
             }
         },
-        '.' // Trigger completions after "."
+        '.',
+    );
+
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeTextDocument((event) => {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor || event.document !== editor.document) return;
+
+            const change = event.contentChanges[0];
+            if (!change || change.text !== ' ') return;
+
+            const position = change.range.end;
+            const line = event.document.lineAt(position.line).text;
+            const beforeCursor = line.slice(0, position.character);
+
+            if (/\{\{\s*[\w.]*\s*$/.test(beforeCursor)) {
+                vscode.commands.executeCommand('editor.action.triggerSuggest');
+            }
+        })
     );
 
     context.subscriptions.push(provider);

@@ -1,6 +1,6 @@
 {
-  "name": "diplodoc",
-  "displayName": "diplodoc",
+  "name": "diplodoc-code-community",
+  "displayName": "Diplodoc (Community extension)",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -9,16 +9,15 @@
   "categories": [
     "Other"
   ],
-"activationEvents": [
-  "onLanguage:markdown",
-  "*"
-],
+  "activationEvents": [
+    "onLanguage:markdown"
+  ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
+    "snippets": [
       {
-        "command": "diplodoc.helloWorld",
-        "title": "Hello World"
+        "language": "markdown",
+        "path": "./snippets/markdown.json"
       }
     ]
   },

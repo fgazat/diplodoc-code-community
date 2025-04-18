@@ -1,0 +1,297 @@
+{
+    "Note": {
+        "prefix": [
+            "примечание",
+            "заметка",
+            "note",
+            "инфо"
+        ],
+        "body": [
+            "{% note info %}",
+            "",
+            "${1:Это примечание.}",
+            "",
+            "{% endnote %}"
+        ],
+        "description": "Вставляет блок примечания. Подробнее: https://diplodoc.com/docs/ru/syntax/notes"
+    },
+    "Note tip": {
+        "prefix": [
+            "tip",
+            "совет",
+            "подсказка",
+            "тип"
+        ],
+        "body": [
+            "{% note tip %}",
+            "",
+            "${1:Это примечание.}",
+            "",
+            "{% endnote %}"
+        ],
+        "description": "Insert tip: https://diplodoc.com/docs/en/syntax/notes#sovet"
+    },
+    "Note warning": {
+        "prefix": [
+            "warning",
+            "важно",
+            "предупреждение",
+            "варнинг"
+        ],
+        "body": [
+            "{% note warning %}",
+            "",
+            "${1:Это примечание.}",
+            "",
+            "{% endnote %}"
+        ],
+        "description": "Insert warning: https://diplodoc.com/docs/en/syntax/notes#vazhno"
+    },
+    "Note alert": {
+        "prefix": [
+            "alert",
+            "внимание",
+            "алерт",
+            "осторожно"
+        ],
+        "body": [
+            "{% note alert %}",
+            "",
+            "${1:Это примечание.}",
+            "",
+            "{% endnote %}"
+        ],
+        "description": "Insert alert: https://diplodoc.com/docs/en/syntax/notes#vnimanie"
+    },
+    "Your note": {
+        "prefix": [
+            "note",
+            "заметка",
+            "кастомзаметка",
+            "своя"
+        ],
+        "body": [
+            "{% note info \"${1:Title}\" %}",
+            "",
+            "${2:This is body.}",
+            "",
+            "{% endnote %}"
+        ],
+        "description": "Insert note: https://diplodoc.com/docs/en/syntax/notes#svoj-zagolovok"
+    },
+    "Cut": {
+        "prefix": [
+            "кат",
+            "свернуть",
+            "cut",
+            "скрыть"
+        ],
+        "body": [
+            "{% cut \"${1:Cut title}\" %}",
+            "",
+            "${2:Body.}",
+            "",
+            "{% endcut %}"
+        ],
+        "description": "Вставляет кат (сворачиваемый блок)"
+    },
+    "Tabs": {
+        "prefix": [
+            "таб",
+            "табы",
+            "tabs",
+            "вкладки"
+        ],
+        "body": [
+            "{% list tabs %}",
+            "",
+            "- ${1:Название таба 1}",
+            "",
+            "  ${2:Текст таба 1.}",
+            "",
+            "- ${3:Название таба 2}",
+            "",
+            "  ${4:Текст таба 2.}",
+            "",
+            "{% endlist %}"
+        ],
+        "description": "Вставляет блок табов"
+    },
+    "Radio Buttons": {
+        "prefix": [
+            "баттон",
+            "радио",
+            "radio",
+            "радиобаттоны"
+        ],
+        "body": [
+            "{% list tabs radio %}",
+            "",
+            "- ${1:Название радиобаттона 1}",
+            "",
+            "  ${2:Текст радиобаттона 1}",
+            "",
+            "- ${3:Название радиобаттона 2}",
+            "",
+            "  ${4:Текст радиобаттона 2}",
+            "",
+            "{% endlist %}"
+        ],
+        "description": "Вставляет блок радиобаттонов"
+    },
+    "Accordion": {
+        "prefix": [
+            "аккордеон",
+            "список",
+            "accordion",
+            "раскрыть"
+        ],
+        "body": [
+            "{% list tabs accordion %}",
+            "",
+            "- ${1:Название пункта 1}",
+            "",
+            "  ${2:Контент для пункта 1.}",
+            "",
+            "- ${3:Название пункта 2}",
+            "",
+            "  ${4:Контент для пункта 2.}",
+            "",
+            "- ${5:Название пункта 3}",
+            "",
+            "  ${6:Контент для пункта 3.}",
+            "",
+            "{% endlist %}"
+        ],
+        "description": "Вставляет аккордеон для больших объемов информации."
+    },
+    "Link": {
+        "prefix": [
+            "ссылка",
+            "линк",
+            "link",
+            "uRL"
+        ],
+        "body": [
+            "[${1:текст_ссылки}](${2:ссылка})"
+        ],
+        "description": "Вставляет простую ссылку."
+    },
+    "Image": {
+        "prefix": [
+            "картинка",
+            "изображение",
+            "image",
+            "фото"
+        ],
+        "body": [
+            "![${1:alt-текст}](_images/${2:image.png} =100x)"
+        ],
+        "description": "Вставляет изображение с alt-текстом и размером."
+    },
+    "Comment Block": {
+        "prefix": [
+            "коммент",
+            "комментарий",
+            "comment",
+            "заметка"
+        ],
+        "body": [
+            "{% if comment == \"${1:Release}\" %}",
+            "",
+            "${2:Содержимое комментария}",
+            "",
+            "{% endif %}"
+        ],
+        "description": "Вставляет блок комментария с условием."
+    },
+    "Custom Locale Block": {
+        "prefix": [
+            "локаль",
+            "locale",
+            "язык",
+            "блокЛокаль"
+        ],
+        "body": [
+            "{% if locale == '${1:вставь_переменную}' %}",
+            "",
+            "${2:Содержимое для локали}",
+            "",
+            "{% endif %}"
+        ],
+        "description": "Вставляет блок с настраиваемой локалью."
+    },
+    "Variable": {
+        "prefix": [
+            "var",
+            "переменная",
+            "вар",
+            "variable"
+        ],
+        "body": "{{ $1 }}",
+        "description": "Insert variables: https://diplodoc.com/docs/en/syntax/vars#subtitudes"
+    },
+    "Definition in text": {
+        "prefix": [
+            "def",
+            "popup",
+            "term",
+            "определение",
+            "попап"
+        ],
+        "body": "[${1:термин}](*${2:ключ термина})",
+        "description": "https://diplodoc.com/docs/ru/syntax/term"
+    },
+    "Include notitle": {
+        "prefix": [
+            "include",
+            "инклюд",
+            "вставка",
+            "подключить"
+        ],
+        "body": "{% include notitle [${1:описание}](${2:../}_includes/$3) %}",
+        "description": "Insert include: https://diplodoc.com/docs/ru/project/includes"
+    },
+    "Video": {
+        "prefix": [
+            "video",
+            "видео",
+            "ролик",
+            "vid"
+        ],
+        "body": "@[${1:название_видеохостинга}](${2:id_видео_или_ссылка_на_него})",
+        "description": "Видео. Например: @[youtube](dQw4w9WgXcQ) Подробнее: https://diplodoc.com/docs/ru/syntax/media#video"
+    },
+    "Multiline Table": {
+        "prefix": [
+            "таблица",
+            "табличка",
+            "многострочная",
+            "table"
+        ],
+        "body": [
+            "#|",
+            "|| **${1:Заголовок1}** | **${2:Заголовок2}** ||",
+            "|| ${3:Текст1} | ${4:Текст2} ||",
+            "|#"
+        ],
+        "description": "Вставляет многострочную таблицу. Подробнее: https://diplodoc.com/docs/ru/syntax/tables/multiline"
+    },
+    "Meta": {
+        "prefix": [
+            "metadata",
+            "метаданные",
+            "мета",
+            "seo"
+        ],
+        "body": [
+            "---",
+            "title: ${1:Title}",
+            "description: ${2:SEO description",
+            "keywords: ${3:SEO Keywords}",
+            "noIndex: ${4:укажи true, чтобы скрыть страницу от поисковиков}",
+            "---"
+        ],
+        "description": "Метаданные в начале файла. Подробнее: https://diplodoc.com/docs/ru/syntax/meta#meta"
+    }
+}
