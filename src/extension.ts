@@ -67,20 +67,18 @@ export function activate(context: vscode.ExtensionContext) {
                 const root = workspaceFolders[0].uri.fsPath;
                 await loadPresets(root);
 
-                const range = document.getWordRangeAtPosition(position, /\{\{[^}]*$/);
-                if (!range) {
+                const lineText = document.lineAt(position).text;
+                const cursorPos = position.character;
+                const beforeCursor = lineText.substring(0, cursorPos);
+
+                // Match something like {{ User.Interface. (or even incomplete)
+                const match = beforeCursor.match(/\{\{\s*([\w.]*)$/);
+                if (!match) {
                     console.log('[EXT] Not inside a {{...}} expression');
                     return [];
                 }
 
-                const text = document.getText(range);
-                const match = text.match(/\{\{\s*(.*?)$/);
-                if (!match) {
-                    console.log('[EXT] No match found for placeholder pattern');
-                    return [];
-                }
-
-                const input = match[1].trim();
+                const input = match[1] || '';
                 const parts = input.split('.').filter(Boolean);
                 console.log('[EXT] Parsed input:', input);
                 console.log('[EXT] Parts:', parts);
@@ -94,9 +92,11 @@ export function activate(context: vscode.ExtensionContext) {
                 }
 
                 const suggestions = Object.entries(contextObj).map(([key, val]) => {
-                    const item = new vscode.CompletionItem(key, typeof val === 'object'
-                        ? vscode.CompletionItemKind.Field
-                        : vscode.CompletionItemKind.Value
+                    const item = new vscode.CompletionItem(
+                        key,
+                        typeof val === 'object'
+                            ? vscode.CompletionItemKind.Field
+                            : vscode.CompletionItemKind.Value
                     );
                     item.detail = `Path: ${['default', ...parts].join('.')}`;
                     if (typeof val !== 'object') {
@@ -109,7 +109,7 @@ export function activate(context: vscode.ExtensionContext) {
                 return suggestions;
             }
         },
-        '.' // Trigger after dot
+        '.' // Trigger completions after "."
     );
 
     context.subscriptions.push(provider);
