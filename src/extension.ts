@@ -4,7 +4,7 @@ import * as yaml from 'yaml';
 
 let presetData: any = {};
 
-async function loadPresets(workspaceRoot: string) {
+async function loadPresets() {
     const presetUris = await vscode.workspace.findFiles('**/presets.yaml');
     presetData = {};
     for (const uri of presetUris) {
@@ -47,8 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
                     return [];
                 }
 
-                const root = workspaceFolders[0].uri.fsPath;
-                await loadPresets(root);
+                await loadPresets();
 
                 const lineText = document.lineAt(position).text;
                 const cursorPos = position.character;
@@ -74,17 +73,12 @@ export function activate(context: vscode.ExtensionContext) {
                 }
 
                 const suggestions = Object.entries(contextObj).map(([key, val]) => {
-
                     const item = new vscode.CompletionItem(
                         key,
-                        typeof val === 'object'
-                            ? vscode.CompletionItemKind.Field
-                            : vscode.CompletionItemKind.Value
+                        typeof val === 'object' ? vscode.CompletionItemKind.Field : vscode.CompletionItemKind.Value,
                     );
 
-
-
-                    let insertText = new vscode.SnippetString(`${key}`)
+                    let insertText = new vscode.SnippetString(`${key}`);
                     item.detail = `Path: ${['default', ...parts].join('.')}`;
                     if (typeof val !== 'object') {
                         item.detail = String(val);
@@ -93,16 +87,19 @@ export function activate(context: vscode.ExtensionContext) {
                         insertText = new vscode.SnippetString(`${key}.`);
                         item.command = {
                             title: 'Trigger Suggest',
-                            command: 'editor.action.triggerSuggest'
+                            command: 'editor.action.triggerSuggest',
                         };
                     }
                     item.insertText = insertText;
                     return item;
                 });
 
-                console.log('[EXT] Suggestions:', suggestions.map(s => s.label));
+                console.log(
+                    '[EXT] Suggestions:',
+                    suggestions.map((s) => s.label),
+                );
                 return suggestions;
-            }
+            },
         },
         '.',
     );
@@ -122,7 +119,7 @@ export function activate(context: vscode.ExtensionContext) {
             if (/\{\{\s*([a-zA-Z0-9_.-]*)$/.test(beforeCursor)) {
                 vscode.commands.executeCommand('editor.action.triggerSuggest');
             }
-        })
+        }),
     );
 
     context.subscriptions.push(provider);
