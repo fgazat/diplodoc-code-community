@@ -38,6 +38,10 @@ vscode 1.95.0 и выше
 
 ## Release Notes
 
+### 0.0.4
+
+Обновлена инструкция.
+
 ### 0.0.1
 
 Initial release of extension
